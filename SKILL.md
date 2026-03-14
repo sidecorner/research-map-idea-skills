@@ -1,0 +1,170 @@
+---
+name: proximity-communication-idea-research
+description: >
+  Research and generate niche product ideas for apps or web services built around
+  proximity/encounter communication (すれ違い通信) features — such as Bluetooth passive
+  discovery, NFC tap-to-connect, location-based encounters, or StreetPass-style mechanics.
+  Pulls real user pain points from Reddit (proximity/social/gaming subreddits) and high-engagement
+  posts from Hacker News, then synthesizes actionable ideas with feasibility scoring.
+
+  ALWAYS use this skill when the user wants to:
+  - Research product ideas involving proximity communication, すれ違い通信, or encounter features
+  - Discover underserved niches in location-based or Bluetooth-based social apps
+  - Investigate user pain points around meeting people IRL, dating apps with proximity, or StreetPass-style UX
+  - Generate scored idea candidates for a small-team or indie developer to build
+---
+
+# Proximity Communication Idea Research Skill
+
+You are helping the user discover niche, actionable product ideas for apps or web services
+centered on **proximity/encounter communication** (すれ違い通信) — the concept of passively
+or actively connecting with people or content when physically nearby, without requiring
+a pre-existing social relationship.
+
+## Step 0: Confirm Target Year (ask in Japanese)
+
+Before doing anything else, ask the user in Japanese:
+
+> 「調査対象の年号を教えてください（例：2026）。
+> 指定がなければ、今年（{current_year}）で進めます。」
+
+Wait for their response. If they don't provide a year, use the current year.
+Save this as `{year}` for all subsequent steps.
+
+---
+
+## Step 1: Collect Data
+
+Run both data collection steps from the **project root directory**
+(`research-map-idea-skills/`). If you're not already there, `cd` to it first.
+
+### 1a. Reddit — Proximity Subreddits
+
+Run the adapted Reddit script:
+
+```bash
+python scripts/fetch_reddit_proximity.py \
+  --year {year} \
+  --limit 30 \
+  --output /tmp/reddit_proximity_{year}.json
+```
+
+This fetches posts from subreddits covering proximity gaming (Pokémon GO, StreetPass),
+dating/social apps (Tinder, Bumble), Bluetooth/NFC tech, privacy concerns, and indie dev.
+See `references/subreddits.md` for the full list and rationale.
+
+### 1b. Hacker News — High-Engagement Posts
+
+Run the dedicated proximity HN script (uses proximity queries by default):
+
+```bash
+python scripts/fetch_hn_proximity.py \
+  --year {year} \
+  --min-points 10 \
+  --output /tmp/hn_proximity_{year}.json
+```
+
+If the current year yields fewer than 10 posts, also run with `--year {year-1}` to supplement with recent trends:
+
+```bash
+python scripts/fetch_hn_proximity.py \
+  --year $((year-1)) \
+  --min-points 10 \
+  --output /tmp/hn_proximity_{prev_year}.json
+```
+
+See `references/hn_queries.md` for the full query list and why each one matters.
+
+---
+
+## Step 2: Analyze the Data
+
+Read both output files. For each source:
+
+**Reddit analysis:**
+- Focus on `top_pain_points` — posts where users express frustration, unmet needs, or feature requests
+- Also check `top_proximity_posts` for proximity-specific discussions
+- Identify recurring themes: what do users wish existed? What is broken or missing?
+
+**HN analysis:**
+- Focus on posts with high `engagement_score` (points + 2× comments)
+- High comment counts = controversy or deep interest — both are valuable signals
+- Look for Show HN posts (people building something), Ask HN posts (people wanting something), and trend articles
+
+**Cross-reference patterns:**
+- Do Reddit users want something that HN shows builders are already trying (but failing at)?
+- Are there pain points that appear in multiple subreddits?
+- What categories are completely absent (= underserved)?
+
+---
+
+## Step 3: Generate Ideas
+
+Propose **3–5 product ideas** based on the research. Each idea must:
+
+1. Have a **clear proximity/encounter communication mechanic** at its core — not just "a social app"
+2. Address a **specific pain point** evidenced by the data
+3. Be realistically buildable by a small team or solo developer
+
+Good idea patterns for proximity communication:
+- **Passive discovery**: "You walked past 3 people who share your interest in X" — no action required
+- **Event-based encounters**: proximity features that activate during conferences, concerts, or local events
+- **Context-specific communities**: hobby groups, travelers, language learners who want to meet nearby
+- **Privacy-first alternatives**: opt-in encounter features that existing apps handle poorly
+- **Gamified encounters**: StreetPass-style collections, stamps, or social artifacts from physical meetups
+- **Wearable/physical objects**: NFC badges, QR systems, or BLE devices that enable encounters
+
+Score each idea using the rubric in `references/scoring_rubric.md`.
+
+---
+
+## Step 4: Write the Report
+
+After analysis and idea generation, save a report following the template in `references/report_template.md`.
+
+**File path:**
+```
+reports/{year}/{yyyy-mm-dd}/{HHMMSS}.md
+```
+
+Use today's actual date and current time (24-hour, no separators) for the filename.
+
+Example: `reports/2026/2026-03-14/143022.md`
+
+Create the directory if it doesn't exist:
+```bash
+mkdir -p reports/{year}/{yyyy-mm-dd}/
+```
+
+The report must include:
+1. Executive summary (1–3 sentences)
+2. Reddit findings: top pain-point posts + observed themes
+3. HN findings: top posts + builder/market interest themes
+4. For each idea:
+   - Concept description
+   - How proximity communication is the core mechanic
+   - Evidence from user data (specific posts/threads)
+   - 5-dimension score table (see rubric)
+   - Recommended next action
+5. Comparative summary table with priority ranking
+
+---
+
+## Key Constraints
+
+- **This skill is local to this project directory.** Do not carry findings or scripts to other projects.
+- **Always use the adapted scripts** (`fetch_reddit_proximity.py` for Reddit, `fetch_hn.py` with proximity queries for HN) rather than manually browsing the sites.
+- **Ground every idea in data.** Each proposed idea should cite at least one real Reddit post or HN thread as evidence.
+- **Keep ideas small-team-viable.** Don't propose ideas that require large engineering teams, regulatory approval, or hardware manufacturing at scale.
+- **Respect the scoring rubric.** Don't inflate scores; honest low scores are more useful than optimistic ones.
+
+---
+
+## Reference Files
+
+- `references/subreddits.md` — Subreddit list with rationale
+- `references/hn_queries.md` — HN queries with design notes
+- `references/scoring_rubric.md` — Full 5-dimension scoring guide with interpretation
+- `references/report_template.md` — Report structure template
+- `scripts/fetch_reddit_proximity.py` — Reddit data collection script (proximity-adapted)
+- `scripts/fetch_hn.py` — HN data collection script (use with `--queries` override)
