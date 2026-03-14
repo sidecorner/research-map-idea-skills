@@ -1,8 +1,19 @@
 # research-map-idea-skills
 
-すれ違い通信（proximity/encounter communication）機能を持つアプリ・Webサービスの**穴場アイデアを調査・発掘するためのローカルスキル**プロジェクトです。
+アプリ・Webサービスの**穴場アイデアを調査・発掘するためのローカルスキル**プロジェクトです。現在2つのリサーチスキルを収録しています。
 
 Reddit のペインポイントと Hacker News の注目投稿を自動収集し、Claude がアイデアを分析・スコアリングしてレポートとして出力します。
+
+---
+
+## 収録スキル
+
+| スキル | テーマ | キーワード例 |
+|--------|--------|------------|
+| **Skill 1** すれ違い通信調査 | Bluetooth・NFC・GPS を使った近接ソーシャル・出会い系コンテンツ | StreetPass、BLE、すれ違い、位置情報ゲーム |
+| **Skill 2** ライト情報交換調査 | 匿名・使い捨て・低摩擦な情報共有アプリ | 匿名掲示板、エフェメラルノート、ピアQ&A |
+
+両テーマを組み合わせたアイデア（例:「その場を通った人に匿名のメモを残せる」）も対応します。
 
 ---
 
@@ -15,12 +26,16 @@ Reddit のペインポイントと Hacker News の注目投稿を自動収集し
 ```
 
 ```
-2025年のすれ違い通信系コンテンツのトレンドを調べて
+手軽に情報交換できるアプリのアイデアを探したい
+```
+
+```
+2025年の匿名共有系コンテンツのトレンドを調べて
 ```
 
 スキルが自動的に起動し、**調査対象年号と優先条件・制約（任意）を日本語で確認**した後、データ収集・分析・レポート生成まで自動で行います。条件を指定するとアイデア生成・スコアリングがその条件に沿った内容になります。
 
-> このスキルは **このディレクトリ内でのみ** 有効です（`CLAUDE.md` によるローカルスキル登録）。
+> 両スキルは **このディレクトリ内でのみ** 有効です（`CLAUDE.md` によるローカルスキル登録）。
 
 ---
 
@@ -29,52 +44,58 @@ Reddit のペインポイントと Hacker News の注目投稿を自動収集し
 ```
 research-map-idea-skills/
 │
-├── CLAUDE.md                        # ローカルスキル登録・プロジェクト設定
-├── SKILL.md                         # スキル定義本体（Claude が参照）
-├── README.md                        # このファイル
+├── CLAUDE.md                              # ローカルスキル登録・プロジェクト設定
+├── SKILL.md                               # Skill 1: すれ違い通信調査
+├── SKILL_light_exchange.md                # Skill 2: ライト情報交換調査
+├── README.md                              # このファイル
 │
 ├── scripts/
-│   ├── fetch_reddit_proximity.py    # Reddit データ収集（すれ違い通信向け）
-│   ├── fetch_hn_proximity.py        # Hacker News データ収集（すれ違い通信向け）
-│   ├── fetch_reddit.py              # Reddit 汎用スクリプト（元ファイル）
-│   └── fetch_hn.py                  # HN 汎用スクリプト（元ファイル）
+│   ├── fetch_reddit_proximity.py          # Reddit（すれ違い通信向け）
+│   ├── fetch_hn_proximity.py              # HN（すれ違い通信向け）
+│   ├── fetch_reddit_light_exchange.py     # Reddit（ライト情報交換向け）
+│   ├── fetch_hn_light_exchange.py         # HN（ライト情報交換向け）
+│   ├── fetch_reddit.py                    # 汎用 Reddit スクリプト（元ファイル）
+│   └── fetch_hn.py                        # 汎用 HN スクリプト（元ファイル）
 │
 ├── references/
-│   ├── subreddits.md                # 調査対象サブレディット一覧と選定理由
-│   ├── hn_queries.md                # HN 検索クエリ一覧と設計メモ
-│   ├── scoring_rubric.md            # アイデアスコアリング基準（5軸）
-│   └── report_template.md          # レポート出力テンプレート
+│   ├── subreddits.md                      # Skill 1 サブレディット一覧
+│   ├── hn_queries.md                      # Skill 1 HN クエリ一覧
+│   ├── light_exchange_subreddits.md       # Skill 2 サブレディット一覧
+│   ├── light_exchange_hn_queries.md       # Skill 2 HN クエリ一覧
+│   ├── scoring_rubric.md                  # 共通: 5軸スコアリング基準
+│   └── report_template.md                 # 共通: レポートテンプレート
 │
 └── reports/
     └── {year}/
         └── yyyy-mm-dd/
-            └── HHMMSS.md           # 生成されたリサーチレポート
+            └── HHMMSS.md                  # 生成されたリサーチレポート
 ```
 
 ---
 
-## スキルの動作フロー
+## スキルの動作フロー（両スキル共通）
 
 ```
-① 年号確認（日本語で質問）
+① 年号 + 条件確認（日本語で質問）
         ↓
 ② Reddit データ収集
-   scripts/fetch_reddit_proximity.py
-   → 25サブレディット・各30件取得
-   → ペインポイント・近接関連フラグ付き
+   Skill 1: fetch_reddit_proximity.py   （25サブレディット・近接通信系）
+   Skill 2: fetch_reddit_light_exchange.py（26サブレディット・情報交換系）
         ↓
 ③ Hacker News データ収集
-   scripts/fetch_hn_proximity.py
-   → 25クエリ・min-points 10 でフィルタ
+   Skill 1: fetch_hn_proximity.py       （25クエリ・min-points 10）
+   Skill 2: fetch_hn_light_exchange.py  （25クエリ・min-points 5）
    → 当年データが少ない場合は前年も補完
         ↓
 ④ データ分析
-   - ペインポイントトップ10の抽出
-   - Reddit × HN のクロス参照
+   - ペインポイントトップ抽出
+   - Reddit × HN クロス参照
    - 「誰も作っていない空白地帯」の発見
+   - 指定条件に関連するシグナルを注視
         ↓
 ⑤ アイデア生成（3〜5案）
-   - 近接通信が核にある設計のみ提案
+   - テーマに合致する核となるメカニズムを持つ設計のみ提案
+   - 条件に合うアイデアを優先。条件外でも有力なものは別掲
    - 実データ（投稿URL）を根拠として引用
         ↓
 ⑥ 5軸スコアリング
@@ -108,7 +129,7 @@ research-map-idea-skills/
 
 ## 調査対象データソース
 
-### Reddit（25サブレディット）
+### Skill 1: すれ違い通信調査（25サブレディット）
 
 カテゴリ別の主な対象：
 
@@ -125,11 +146,27 @@ research-map-idea-skills/
 
 詳細は [`references/subreddits.md`](references/subreddits.md) を参照。
 
-### Hacker News（25クエリ）
+**HN（25クエリ）:** `proximity app` / `StreetPass` / `BLE beacon` / `geofence social` など。詳細は [`references/hn_queries.md`](references/hn_queries.md) を参照。
 
-`proximity app` / `StreetPass` / `BLE beacon` / `geofence social` / `serendipitous encounters` など、すれ違い通信に直接関連するクエリで高評価投稿を収集。
+---
 
-詳細は [`references/hn_queries.md`](references/hn_queries.md) を参照。
+### Skill 2: ライト情報交換調査（26サブレディット）
+
+| カテゴリ | サブレディット |
+|---------|-------------|
+| カジュアル Q&A | r/AskReddit, r/NoStupidQuestions, r/tipofmytongue, r/explainlikeimfive |
+| アイデア・思考共有 | r/Showerthoughts, r/mildlyinteresting, r/lifehacks |
+| 匿名表現 | r/confession, r/offmychest, r/TrueOffMyChest |
+| ハイパーローカル | r/Nextdoor |
+| デジタルミニマリズム | r/nosurf, r/digitalminimalism, r/CasualConversation |
+| 生産性・ノートツール | r/productivity, r/Notion, r/ObsidianMD |
+| インディー開発 | r/SideProject, r/indiehackers, r/AppIdeas, r/androidapps, r/iosapps |
+| コンテンツ発見 | r/InternetIsBeautiful |
+| Q&A フォーマット参照 | r/personalfinance, r/legaladvice |
+
+詳細は [`references/light_exchange_subreddits.md`](references/light_exchange_subreddits.md) を参照。
+
+**HN（25クエリ）:** `ephemeral messaging` / `anonymous sharing app` / `local bulletin board` / `low friction sharing` など。詳細は [`references/light_exchange_hn_queries.md`](references/light_exchange_hn_queries.md) を参照。
 
 ---
 
@@ -138,17 +175,21 @@ research-map-idea-skills/
 Claude を介さず手動でデータ収集したい場合：
 
 ```bash
-# Reddit（すれ違い通信向け）
-python scripts/fetch_reddit_proximity.py --year 2026 --limit 30 --output /tmp/reddit_out.json
+# Skill 1: Reddit（すれ違い通信向け）
+python scripts/fetch_reddit_proximity.py --year 2026 --limit 30 --output /tmp/reddit_proximity.json
 
-# Hacker News（すれ違い通信向け）
-python scripts/fetch_hn_proximity.py --year 2026 --min-points 10 --output /tmp/hn_out.json
+# Skill 1: Hacker News（すれ違い通信向け）
+python scripts/fetch_hn_proximity.py --year 2026 --min-points 10 --output /tmp/hn_proximity.json
 
-# カスタムサブレディットを指定
-python scripts/fetch_reddit_proximity.py --year 2026 --subreddits "pokemongo,streetpass,NFC"
+# Skill 2: Reddit（ライト情報交換向け）
+python scripts/fetch_reddit_light_exchange.py --year 2026 --limit 30 --output /tmp/reddit_light.json
 
-# カスタムクエリを指定
-python scripts/fetch_hn_proximity.py --year 2026 --queries "proximity app,NFC social"
+# Skill 2: Hacker News（ライト情報交換向け）
+python scripts/fetch_hn_light_exchange.py --year 2026 --min-points 5 --output /tmp/hn_light.json
+
+# カスタム指定の例
+python scripts/fetch_reddit_light_exchange.py --year 2026 --subreddits "AskReddit,SideProject,AppIdeas"
+python scripts/fetch_hn_light_exchange.py --year 2026 --queries "ephemeral messaging,anonymous notes app"
 ```
 
 いずれも認証不要（Reddit Public JSON API / HN Algolia API を使用）。
