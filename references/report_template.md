@@ -14,6 +14,7 @@ Example path: `reports/2026/2026-03-14/143022.md`
 **調査対象年号:** {year}
 **調査日時:** {datetime}
 **データソース:** Reddit ({subreddits_count} subreddits) / Hacker News ({hn_queries_count} queries)
+**指定条件:** {constraints（なし の場合は「なし」）}
 
 ---
 

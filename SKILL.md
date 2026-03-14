@@ -21,15 +21,24 @@ centered on **proximity/encounter communication** (すれ違い通信) — the c
 or actively connecting with people or content when physically nearby, without requiring
 a pre-existing social relationship.
 
-## Step 0: Confirm Target Year (ask in Japanese)
+## Step 0: Confirm Target Year and Constraints (ask in Japanese)
 
-Before doing anything else, ask the user in Japanese:
+Ask the user two questions in a single message in Japanese:
 
-> 「調査対象の年号を教えてください（例：2026）。
-> 指定がなければ、今年（{current_year}）で進めます。」
+> 「以下の2点を教えてください。
+>
+> **① 調査対象の年号**（例：2026）
+> 　指定がなければ今年（{current_year}）で進めます。
+>
+> **② 優先したい条件・制約**（任意）
+> 　例：「iOS向け」「BLEのみ」「日本市場」「ゲーム系」「B2B SaaS」「ソロ開発」「NFC限定」「マッチング系は除く」など。
+> 　なければ「なし」か空欄で構いません。」
 
-Wait for their response. If they don't provide a year, use the current year.
-Save this as `{year}` for all subsequent steps.
+Wait for their response. Save the values as:
+- `{year}` — the target year (default: current year)
+- `{constraints}` — freeform text describing the user's requirements, or empty if none
+
+**If constraints are provided**, note them before proceeding. They will guide idea generation and scoring in Step 3 — but do **not** narrow the data collection in Steps 1–2. Collecting broad data and then filtering ideas produces better results than filtering the data upfront.
 
 ---
 
@@ -81,6 +90,8 @@ See `references/hn_queries.md` for the full query list and why each one matters.
 
 Read both output files. For each source:
 
+> **If `{constraints}` were specified**, keep them in mind while reading — note which pain points and trends are especially relevant to those constraints. Don't discard other findings; you'll need the full picture to judge whether the constraints are well-served by the data.
+
 **Reddit analysis:**
 - Focus on `top_pain_points` — posts where users express frustration, unmet needs, or feature requests
 - Also check `top_proximity_posts` for proximity-specific discussions
@@ -114,6 +125,19 @@ Good idea patterns for proximity communication:
 - **Gamified encounters**: StreetPass-style collections, stamps, or social artifacts from physical meetups
 - **Wearable/physical objects**: NFC badges, QR systems, or BLE devices that enable encounters
 
+### Applying User Constraints
+
+If `{constraints}` were specified, apply them as follows:
+
+- **Prioritize** ideas that naturally fit the constraints. Lead with those.
+- **Adjust scoring** to reflect constraints — for example:
+  - "iOS only" → lower 実現可能性 for ideas relying on BLE background scanning (OS-restricted on iOS)
+  - "ソロ開発" → weight 小規模開発適性 more heavily; flag infra-heavy ideas as less suitable
+  - "日本市場" → consider Japan-specific context (e.g., LINE integration potential, commuter culture, StreetPass nostalgia)
+  - "B2B SaaS" → favor ideas with identifiable business buyers (event organizers, venue operators, HR tech)
+- **Don't force compliance.** If the data strongly points toward an idea that conflicts with the constraints, include it as a separate "Outside constraints but high signal" section and explain why it's worth considering.
+- **Note trade-offs honestly.** If a constraint makes certain ideas significantly harder (e.g., "NFC only" excludes GPS-based approaches that would score higher), say so clearly.
+
 Score each idea using the rubric in `references/scoring_rubric.md`.
 
 ---
@@ -138,6 +162,7 @@ mkdir -p reports/{year}/{yyyy-mm-dd}/
 
 The report must include:
 1. Executive summary (1–3 sentences)
+   - If constraints were specified, state them at the top: `**指定条件:** {constraints}`
 2. Reddit findings: top pain-point posts + observed themes
 3. HN findings: top posts + builder/market interest themes
 4. For each idea:
