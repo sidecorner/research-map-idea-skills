@@ -7,7 +7,7 @@ Adapted from fetch_reddit.py for the light information exchange idea research pr
 
 Usage:
     python scripts/fetch_reddit_light_exchange.py --year 2026 --output /tmp/reddit_light_2026.json
-    python scripts/fetch_reddit_light_exchange.py --year 2025 --limit 50 --output /tmp/reddit_light_2026.json
+    python scripts/fetch_reddit_light_exchange.py --year 2025 --limit 50 --output /tmp/reddit_light_2025.json
 
 No authentication required (uses Reddit's public JSON API).
 """
@@ -16,7 +16,6 @@ import argparse
 import json
 import time
 import urllib.request
-import urllib.parse
 from datetime import datetime, timezone
 
 

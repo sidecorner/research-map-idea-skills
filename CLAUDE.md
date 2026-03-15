@@ -80,6 +80,18 @@ research-map-idea-skills/
 - **Current year (or no year specified):** Use rolling 12-month window (`--rolling` flag). Example: if today is 2026-03-15, collect from 2025-03-15 to 2026-03-15.
 - **Past year:** Use full calendar year (`--year YYYY`). Example: `--year 2025` collects 2025-01-01 to 2025-12-31.
 
+## Post-Execution Self-Review (mandatory)
+
+After every skill run (either skill), always execute **Step 5** defined in the active skill file:
+
+- Review scripts for bugs or errors encountered during the run
+- Check if queries/keywords need updating based on new terminology in the data
+- Fix any skill instruction gaps or template inconsistencies
+- Update `README.md` if the user-facing description is now inaccurate
+- Report changes in Japanese at the end of the response (2–3 bullets, no separate file)
+
+This applies even if the user does not explicitly ask for it.
+
 ## Scope
 
 Both skills are **scoped to this directory only**. Do not apply them in other projects.

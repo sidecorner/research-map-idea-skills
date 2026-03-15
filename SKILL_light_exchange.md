@@ -254,6 +254,28 @@ The report must include:
 
 ---
 
+## Step 5: Self-Review — Find and Fix Improvements
+
+After the report is saved, review the skill itself for issues. This step is **mandatory** after every execution.
+
+### What to check
+
+1. **Script bugs or errors** — Did any script warn, fail, or produce unexpected output during this run? If so, investigate and fix the root cause in the script.
+2. **Query drift** — Do the current HN / Reddit / Qiita queries still reflect active community interest? If new terminology appeared in the data (e.g., a new platform name, an emerging sharing pattern) that is missing from the query lists or keyword filters, add it to the relevant reference file and script.
+3. **Skill instruction gaps** — Was any step of the skill ambiguous or did it lead to a suboptimal decision? Update the relevant step in this file to be clearer.
+4. **Report template gaps** — Did the generated report feel incomplete or structurally inconsistent with the template? Update `references/report_template.md` if needed.
+5. **README accuracy** — If changes to scripts, queries, or the skill flow affect the README (e.g., subreddit counts, query counts, flow description), update `README.md`.
+
+### How to apply fixes
+
+- Fix bugs in scripts directly (Edit tool).
+- Add/update queries in `references/` files and the corresponding script's query list.
+- Update this skill file (`SKILL_light_exchange.md`) for instruction gaps.
+- Update `README.md` if the user-facing description is now inaccurate.
+- Briefly note what was changed at the end of the session in Japanese (2–3 bullet points max). Do not write a separate file for this — just output it in the response.
+
+---
+
 ## Key Constraints
 
 - **This skill is local to this project directory.** Do not carry findings or scripts to other projects.

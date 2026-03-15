@@ -165,7 +165,6 @@ def main():
 
     if args.rolling:
         start_ts, end_ts = build_timestamps(target_year, rolling=True)
-        from datetime import date
         start_d = datetime.fromtimestamp(start_ts, tz=timezone.utc).date()
         end_d = datetime.fromtimestamp(end_ts, tz=timezone.utc).date()
         period_label = f"rolling 12 months ({start_d} to {end_d})"

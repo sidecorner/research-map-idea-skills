@@ -232,6 +232,7 @@ The report must include:
 1. Executive summary (1–3 sentences)
    - If constraints were specified, state them at the top: `**指定条件:** {constraints}`
    - Always include: `**調査期間:** {start_date} 〜 {end_date}`
+   - Always include: `**調査テーマ:** すれ違い通信`
 2. Reddit findings: top pain-point posts + observed themes
 3. HN findings: top posts + builder/market interest themes
 4. Qiita findings: top articles + Japanese developer perspectives
@@ -241,7 +242,29 @@ The report must include:
    - Evidence from user data (specific posts/threads)
    - 5-dimension score table (see rubric)
    - Recommended next action
-5. Comparative summary table with priority ranking
+6. Comparative summary table with priority ranking
+
+---
+
+## Step 5: Self-Review — Find and Fix Improvements
+
+After the report is saved, review the skill itself for issues. This step is **mandatory** after every execution.
+
+### What to check
+
+1. **Script bugs or errors** — Did any script warn, fail, or produce unexpected output during this run? If so, investigate and fix the root cause in the script.
+2. **Query drift** — Do the current HN / Reddit / Qiita queries still reflect active community interest? If new terminology appeared in the data (e.g., a new protocol name, a new platform) that is missing from the query lists or keyword filters, add it to the relevant reference file and script.
+3. **Skill instruction gaps** — Was any step of the skill ambiguous or did it lead to a suboptimal decision? Update the relevant step in this file to be clearer.
+4. **Report template gaps** — Did the generated report feel incomplete or structurally inconsistent with the template? Update `references/report_template.md` if needed.
+5. **README accuracy** — If changes to scripts, queries, or the skill flow affect the README (e.g., subreddit counts, query counts, flow description), update `README.md`.
+
+### How to apply fixes
+
+- Fix bugs in scripts directly (Edit tool).
+- Add/update queries in `references/` files and the corresponding script's query list.
+- Update this skill file (`SKILL.md`) for instruction gaps.
+- Update `README.md` if the user-facing description is now inaccurate.
+- Briefly note what was changed at the end of the session in Japanese (2–3 bullet points max). Do not write a separate file for this — just output it in the response.
 
 ---
 

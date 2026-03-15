@@ -62,11 +62,10 @@ MAX_CONSECUTIVE_403 = 3  # Stop early if rate limited persistently
 
 def build_date_range(year: int, rolling: bool) -> tuple[str, str]:
     """Compute (start_date, end_date) strings in YYYY-MM-DD format."""
-    today = datetime.now(timezone.utc).date()
     if rolling:
-        end_date = today
-        start_date = today.replace(year=today.year - 1)
-        return str(start_date), str(end_date)
+        end_dt = datetime.now(timezone.utc)
+        start_dt = end_dt - timedelta(days=365)
+        return start_dt.date().isoformat(), end_dt.date().isoformat()
     return f"{year}-01-01", f"{year}-12-31"
 
 
