@@ -1,4 +1,4 @@
-# Idea Scoring Rubric for Proximity Communication Apps
+# Idea Scoring Rubric (Proximity Communication / Light Exchange)
 
 Each idea discovered through research is scored on five dimensions using a 1–5 scale. These scores help quickly compare ideas and prioritize which ones are worth pursuing for solo or small-team development.
 

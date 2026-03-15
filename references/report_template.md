@@ -74,8 +74,9 @@ For each idea, include the following structure:
 **概要**
 {1–2 paragraph description of the idea, what problem it solves, and who it's for}
 
-**すれ違い通信の活用方法**
-{How proximity/encounter communication is the core mechanic — e.g., BLE passive discovery, location check-in, event-based encounter, QR/NFC tap}
+**コアメカニクス**
+{Proximity skill: How proximity/encounter communication is the core mechanic — e.g., BLE passive discovery, location check-in, event-based encounter, QR/NFC tap}
+{Light exchange skill: What makes the exchange feel "light" — specifically how friction is reduced compared to full social platforms}
 
 **根拠となるユーザーの声**
 {1–3 specific Reddit posts, HN threads, or Qiita articles that validate this pain point or demand}
@@ -110,7 +111,7 @@ For each idea, include the following structure:
 
 ---
 
-*このレポートは proximity-communication-idea-research スキルにより自動生成されました。データソース: Reddit / Hacker News / Qiita*
+*このレポートは {skill_name} スキルにより自動生成されました。データソース: Reddit / Hacker News / Qiita*
 ```
 
 ---

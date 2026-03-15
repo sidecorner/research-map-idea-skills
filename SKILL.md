@@ -101,7 +101,7 @@ python scripts/fetch_hn_proximity.py \
   --output /tmp/hn_proximity_{year}.json
 ```
 
-If the result yields fewer than 5 posts, also run the previous year to supplement:
+If the result yields fewer than 10 posts, also run the previous year to supplement:
 
 ```bash
 python scripts/fetch_hn_proximity.py \
@@ -210,6 +210,8 @@ Score each idea using the rubric in `references/scoring_rubric.md`.
 
 After analysis and idea generation, save a report following the template in `references/report_template.md`.
 
+Use `{skill_name}` = `proximity-communication-idea-research` in the report footer.
+
 **File path:**
 ```
 reports/{year}/{yyyy-mm-dd}/{HHMMSS}.md
@@ -233,7 +235,7 @@ The report must include:
 4. Qiita findings: top articles + Japanese developer perspectives
 5. For each idea:
    - Concept description
-   - How proximity communication is the core mechanic
+   - Core mechanic: how proximity/encounter communication drives the experience
    - Evidence from user data (specific posts/threads)
    - 5-dimension score table (see rubric)
    - Recommended next action

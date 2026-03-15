@@ -157,13 +157,18 @@ def main():
     pain_posts = []
     proximity_posts = []
 
+    current_year = datetime.now(timezone.utc).year
+    # When target_year is current (or recent), Reddit uses t=year (rolling 12 months).
+    # Client-side year filter would discard valid older posts — skip it in rolling mode.
+    use_strict_year_filter = target_year < current_year - 1
+
     for sub in subreddits:
         print(f"  Fetching r/{sub}...")
         posts = fetch_subreddit_posts(sub, limit=args.limit, sort="top", target_year=target_year)
 
         for post in posts:
-            # Apply strict year filter client-side
-            if not filter_by_year(post, target_year):
+            # Apply strict year filter only for past years fetched with t=all
+            if use_strict_year_filter and not filter_by_year(post, target_year):
                 continue
 
             entry = {

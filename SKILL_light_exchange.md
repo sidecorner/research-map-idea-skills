@@ -223,6 +223,8 @@ Score each idea using the rubric in `references/scoring_rubric.md`.
 
 Save a report following the template in `references/report_template.md`.
 
+Use `{skill_name}` = `light-information-exchange-idea-research` in the report footer.
+
 **File path:**
 ```
 reports/{year}/{yyyy-mm-dd}/{HHMMSS}.md
