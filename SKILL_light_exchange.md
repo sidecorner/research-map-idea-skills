@@ -156,8 +156,9 @@ Read all three output files. For each source:
 > full picture to evaluate whether the constraints are well-served.
 
 **Reddit analysis:**
-- Focus on `top_pain_points` — posts where users express frustration, unmet needs, or tool gaps
-- Also check `top_relevant_posts` for lightweight sharing use cases
+- **Primary source:** Use `top_combined_posts` — posts that are BOTH pain points AND light-exchange-relevant. This is the highest signal list.
+- **Secondary source:** `top_relevant_posts` for broader light-exchange discussions without explicit pain signals
+- **Tertiary source:** `top_pain_points` contains all posts matching pain keywords (may include off-topic viral posts from broad subreddits — treat as background context only)
 - Look for: "I just want a simple way to…", "why is there no app that…", "I use X for this but it's too heavy"
 - Note which subreddits have the most signal — different communities have different friction points
 
@@ -168,6 +169,7 @@ Read all three output files. For each source:
 - High comment counts with controversial tone often reveal structural tensions — e.g., "anonymous = abuse"
 
 **Qiita analysis:**
+- Read the `items` array from the Qiita JSON output (key is `items`, not `articles`)
 - Focus on articles with high `engagement_score` (likes + 2× comments)
 - Look for "やってみた" (tried it) and "作ってみた" (built it) articles — these reveal implementation pain points and UX decisions
 - Articles about moderation challenges, abuse patterns, and anonymity tradeoffs are especially valuable

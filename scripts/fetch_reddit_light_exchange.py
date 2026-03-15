@@ -191,9 +191,14 @@ def main():
 
         time.sleep(1)  # be polite to Reddit's API
 
+    # Combined list: posts that are BOTH pain points AND light-exchange relevant
+    # This is the highest-signal list — use it as the primary analysis source.
+    combined_posts = [p for p in all_posts if p["is_pain_point"] and p["is_light_exchange_relevant"]]
+
     all_posts.sort(key=lambda x: x["engagement_score"], reverse=True)
     pain_posts.sort(key=lambda x: x["engagement_score"], reverse=True)
     relevant_posts.sort(key=lambda x: x["engagement_score"], reverse=True)
+    combined_posts.sort(key=lambda x: x["engagement_score"], reverse=True)
 
     output = {
         "target_year": target_year,
@@ -201,7 +206,9 @@ def main():
         "total_posts": len(all_posts),
         "pain_point_posts": len(pain_posts),
         "light_exchange_relevant_posts": len(relevant_posts),
+        "combined_posts": len(combined_posts),
         "subreddits_searched": subreddits,
+        "top_combined_posts": combined_posts[:50],  # pain + light-exchange — highest signal
         "top_pain_points": pain_posts[:50],
         "top_relevant_posts": relevant_posts[:50],
         "all_posts": all_posts[:100],
@@ -213,6 +220,7 @@ def main():
     print(f"\nDone! Fetched {len(all_posts)} posts total.")
     print(f"  Pain point posts:         {len(pain_posts)}")
     print(f"  Light exchange relevant:  {len(relevant_posts)}")
+    print(f"  Combined (pain+light):    {len(combined_posts)}")
     print(f"Output saved to: {args.output}")
 
 

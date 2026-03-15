@@ -149,8 +149,9 @@ Read all three output files. For each source:
 > **If `{constraints}` were specified**, keep them in mind while reading — note which pain points and trends are especially relevant to those constraints. Don't discard other findings; you'll need the full picture to judge whether the constraints are well-served by the data.
 
 **Reddit analysis:**
-- Focus on `top_pain_points` — posts where users express frustration, unmet needs, or feature requests
-- Also check `top_proximity_posts` for proximity-specific discussions
+- **Primary source:** Use `top_combined_posts` — posts that are BOTH pain points AND proximity-relevant. This is the highest signal list.
+- **Secondary source:** `top_proximity_posts` for broader proximity discussions without pain signals
+- **Tertiary source:** `top_pain_points` contains all posts matching pain keywords (may include off-topic viral posts from broad subreddits — treat as background context only)
 - Identify recurring themes: what do users wish existed? What is broken or missing?
 
 **HN analysis:**
@@ -159,6 +160,7 @@ Read all three output files. For each source:
 - Look for Show HN posts (people building something), Ask HN posts (people wanting something), and trend articles
 
 **Qiita analysis:**
+- Read the `items` array from the Qiita JSON output (key is `items`, not `articles`)
 - Focus on articles with high `engagement_score` (likes + 2× comments)
 - Look for "やってみた" (tried it) articles — often reveal implementation pain points
 - Articles about failed approaches or unexpected limitations are especially valuable signals
