@@ -9,8 +9,10 @@ Example path: `reports/2026/2026-03-14/143022.md`
 ## Template
 
 ```markdown
-# すれ違い通信アイデア調査レポート
+# {report_title}アイデア調査レポート
+<!-- report_title: proximity → "すれ違い通信", light exchange → "ライトな情報交換" -->
 
+**調査テーマ:** {report_title}
 **調査対象年号:** {year}
 **調査期間:** {start_date} 〜 {end_date}（直近1年間 or {year}年通年）
 **調査日時:** {datetime}

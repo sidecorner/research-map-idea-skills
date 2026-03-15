@@ -78,7 +78,7 @@ LIGHT_EXCHANGE_KEYWORDS = [
     "low friction", "no account", "instant", "temporary", "disposable",
     "peer to peer", "neighbor", "nearby", "local knowledge", "ask",
     "tell", "inform", "notify", "leave a note", "pass along",
-],
+]
 
 HEADERS = {
     "User-Agent": "LightExchangeResearch/1.0 (educational research tool)",
@@ -117,10 +117,7 @@ def is_light_exchange_relevant(post: dict) -> bool:
     title = post.get("title", "").lower()
     body = post.get("selftext", "").lower()[:300]
     text = title + " " + body
-    keywords = LIGHT_EXCHANGE_KEYWORDS
-    if isinstance(keywords, tuple):
-        keywords = keywords[0]
-    return any(kw in text for kw in keywords)
+    return any(kw in text for kw in LIGHT_EXCHANGE_KEYWORDS)
 
 
 def filter_by_year(post: dict, year: int) -> bool:

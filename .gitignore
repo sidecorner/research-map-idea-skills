@@ -1,3 +1,8 @@
+# 機密情報（絶対にコミットしない）
+.env
+*.token
+secrets/
+
 # Python
 __pycache__/
 *.py[cod]

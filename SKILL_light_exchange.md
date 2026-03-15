@@ -73,6 +73,10 @@ Use the date range flags determined in Step 0:
 
 ### 1a. Reddit — Light Exchange Subreddits
 
+> **Note:** The Reddit script does not support `--rolling`. Pass `--year {year}` in all cases.
+> When `{year}` is the current year, Reddit's API automatically returns the past 12 months
+> (equivalent to rolling behaviour), so no additional flag is needed.
+
 ```bash
 python scripts/fetch_reddit_light_exchange.py \
   --year {year} \
@@ -242,7 +246,7 @@ The report must include:
    - Evidence from user data (specific posts/threads)
    - 5-dimension score table (see rubric)
    - Recommended next action
-5. Comparative summary table with priority ranking
+6. Comparative summary table with priority ranking
 
 ---
 

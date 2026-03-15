@@ -91,13 +91,13 @@ research-map-idea-skills/
    Skill 2: fetch_reddit_light_exchange.py（26サブレディット・情報交換系）
         ↓
 ③ Hacker News データ収集
-   Skill 1: fetch_hn_proximity.py        （25クエリ・min-points 10）
+   Skill 1: fetch_hn_proximity.py        （25クエリ・min-points 5）
    Skill 2: fetch_hn_light_exchange.py   （25クエリ・min-points 5）
    → 結果が少ない場合は前年も補完
         ↓
 ④ Qiita データ収集
-   Skill 1: fetch_qiita_proximity.py     （20クエリ・日本語開発者コミュニティ）
-   Skill 2: fetch_qiita_light_exchange.py（20クエリ・日本語開発者コミュニティ）
+   Skill 1: fetch_qiita_proximity.py     （12クエリ・日本語開発者コミュニティ）
+   Skill 2: fetch_qiita_light_exchange.py（12クエリ・日本語開発者コミュニティ）
         ↓
 ⑤ データ分析
    - ペインポイントトップ抽出
@@ -170,7 +170,7 @@ research-map-idea-skills/
 
 **HN（25クエリ）:** `proximity app` / `StreetPass` / `BLE beacon` / `geofence social` など。詳細は [`references/hn_queries.md`](references/hn_queries.md) を参照。
 
-**Qiita（20クエリ）:** `すれ違い通信` / `BLE 近接` / `NFC タップ アプリ` / `位置情報 ソーシャル` など。詳細は [`references/qiita_queries_proximity.md`](references/qiita_queries_proximity.md) を参照。
+**Qiita（12クエリ）:** `tag:BLE` / `tag:NFC` / `title:すれ違い` / `title:BLE 近接` など。詳細は [`references/qiita_queries_proximity.md`](references/qiita_queries_proximity.md) を参照。
 
 ---
 
@@ -192,7 +192,7 @@ research-map-idea-skills/
 
 **HN（25クエリ）:** `ephemeral messaging` / `anonymous sharing app` / `local bulletin board` / `low friction sharing` など。詳細は [`references/light_exchange_hn_queries.md`](references/light_exchange_hn_queries.md) を参照。
 
-**Qiita（20クエリ）:** `匿名 投稿 アプリ` / `エフェメラル メッセージ` / `匿名掲示板 実装` / `軽量 情報共有` など。詳細は [`references/qiita_queries_light_exchange.md`](references/qiita_queries_light_exchange.md) を参照。
+**Qiita（12クエリ）:** `tag:匿名` / `tag:掲示板` / `title:匿名 投稿` / `title:軽量 情報共有` など。詳細は [`references/qiita_queries_light_exchange.md`](references/qiita_queries_light_exchange.md) を参照。
 
 ---
 
@@ -246,10 +246,10 @@ Claude を介さず手動でデータ収集したい場合：
 python scripts/fetch_reddit_proximity.py --year 2026 --limit 30 --output /tmp/reddit_proximity.json
 
 # Hacker News（カレンダー年）
-python scripts/fetch_hn_proximity.py --year 2025 --min-points 10 --output /tmp/hn_proximity.json
+python scripts/fetch_hn_proximity.py --year 2025 --min-points 5 --output /tmp/hn_proximity.json
 
 # Hacker News（直近1年ローリング）
-python scripts/fetch_hn_proximity.py --rolling --min-points 10 --output /tmp/hn_proximity_rolling.json
+python scripts/fetch_hn_proximity.py --rolling --min-points 5 --output /tmp/hn_proximity_rolling.json
 
 # Qiita（カレンダー年）※ QIITA_TOKEN 環境変数が自動適用される
 python scripts/fetch_qiita_proximity.py --year 2025 --output /tmp/qiita_proximity.json

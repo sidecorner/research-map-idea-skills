@@ -68,6 +68,10 @@ Use the date range flags determined in Step 0:
 
 ### 1a. Reddit — Proximity Subreddits
 
+> **Note:** The Reddit script does not support `--rolling`. Pass `--year {year}` in all cases.
+> When `{year}` is the current year, Reddit's API automatically returns the past 12 months
+> (equivalent to rolling behaviour), so no additional flag is needed.
+
 ```bash
 python scripts/fetch_reddit_proximity.py \
   --year {year} \
@@ -85,7 +89,7 @@ See `references/subreddits.md` for the full list and rationale.
 ```bash
 python scripts/fetch_hn_proximity.py \
   --rolling \
-  --min-points 10 \
+  --min-points 5 \
   --output /tmp/hn_proximity_rolling.json
 ```
 
@@ -93,11 +97,11 @@ python scripts/fetch_hn_proximity.py \
 ```bash
 python scripts/fetch_hn_proximity.py \
   --year {year} \
-  --min-points 10 \
+  --min-points 5 \
   --output /tmp/hn_proximity_{year}.json
 ```
 
-If the result yields fewer than 10 posts, also run the previous year to supplement:
+If the result yields fewer than 5 posts, also run the previous year to supplement:
 
 ```bash
 python scripts/fetch_hn_proximity.py \
