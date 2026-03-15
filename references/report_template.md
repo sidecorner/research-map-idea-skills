@@ -1,8 +1,8 @@
 # Report Template
 
-Reports are saved to: `reports/{year}/yyyy-mm-dd/HHMMSS.md`
+Reports are saved to: `reports/{year}/{yyyymmdd}/{hhmmss}.md`
 
-Example path: `reports/2026/2026-03-14/143022.md`
+Example path: `reports/2026/20260314/143022.md`
 
 ---
 
@@ -118,8 +118,8 @@ For each idea, include the following structure:
 
 ## File Naming Convention
 
-- Directory: `reports/{year}/{yyyy-mm-dd}/`
-- Filename: `{HHMMSS}.md` (24-hour format, no separators)
-- Example: `reports/2026/2026-03-14/143022.md`
+- Directory: `reports/{year}/{yyyymmdd}/`  ← date has NO dashes (e.g. `20260314`)
+- Filename: `{hhmmss}.md` — 24-hour, no separators (e.g. `143022.md` for 14:30:22)
+- Full example: `reports/2026/20260314/143022.md`
 
 The report file must be created **after** completing the research and analysis, not before.

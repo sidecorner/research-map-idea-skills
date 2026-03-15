@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-fetch_qiita_proximity.py - Fetch proximity/encounter communication articles from Qiita
-via Qiita API v2.
+fetch_qiita.py - Fetch proximity/encounter communication and lightweight information
+exchange articles from Qiita via Qiita API v2.
 
 Usage:
-    python scripts/fetch_qiita_proximity.py --rolling --output /tmp/qiita_proximity_rolling.json
-    python scripts/fetch_qiita_proximity.py --rolling --token YOUR_TOKEN --output /tmp/qiita_proximity_rolling.json
-    python scripts/fetch_qiita_proximity.py --year 2025 --token YOUR_TOKEN --output /tmp/qiita_proximity_2025.json
+    python scripts/fetch_qiita.py --rolling --output /tmp/qiita_rolling.json
+    python scripts/fetch_qiita.py --rolling --token YOUR_TOKEN --output /tmp/qiita_rolling.json
+    python scripts/fetch_qiita.py --year 2025 --output /tmp/qiita_2025.json
 
 Rate limits:
-    - No token:  60 requests/hour  → default 12 queries stays within budget
+    - No token:  60 requests/hour  → 24 queries at 2s sleep fits comfortably
     - With token: 1000 requests/hour → no concern
 
 Query strategy:
     - Uses "tag:X" and "title:X" forms for precision over full-text search
-    - Post-filtering ensures only proximity-relevant articles are kept
+    - Post-filtering ensures only relevant articles are kept
 
 Obtaining a Qiita token (free):
     https://qiita.com/settings/applications → Personal Access Token → read_qiita scope
@@ -29,10 +29,10 @@ import urllib.parse
 from datetime import datetime, timezone, timedelta
 
 
-# ── Core queries (12) ── designed to fit within the 60 req/hr free tier in one run.
-# Use "tag:X" for high-precision tag search, "title:X" for title keyword search.
-# Prefer tag searches first (more stable signal); title searches second.
-PROXIMITY_QUERIES = [
+# Queries covering both proximity communication and lightweight info exchange.
+# 24 total — fits within the 60 req/hr free tier (24 requests at 2s sleep ≈ 48 seconds).
+QUERIES = [
+    # Proximity / encounter communication
     "tag:BLE",
     "tag:Bluetooth",
     "tag:NFC",
@@ -45,15 +45,36 @@ PROXIMITY_QUERIES = [
     "title:ジオフェンス",
     "title:StreetPass",
     "title:Bluetooth proximity",
+    # Lightweight information exchange
+    "tag:匿名",
+    "tag:掲示板",
+    "tag:P2P",
+    "tag:チャット 軽量",
+    "title:匿名 投稿",
+    "title:匿名掲示板",
+    "title:エフェメラル",
+    "title:軽量 情報共有",
+    "title:ハイパーローカル",
+    "title:掲示板 作り",
+    "title:anonymous sharing",
+    "title:ephemeral",
 ]
 
 # Keywords for post-filtering: article title OR any tag must contain at least one.
-# Prevents high-engagement but off-topic articles from appearing in results.
 RELEVANCE_KEYWORDS = [
+    # Proximity / encounter (Japanese + English)
     "ble", "nfc", "bluetooth", "近接", "すれ違い", "streetpass", "ビーコン",
     "位置情報", "gps", "ジオフェンス", "ibeacon", "geofence", "mesh",
     "proximity", "corebluetooth", "p2p", "offline", "encounter", "location",
     "nearby", "beacon",
+    # Lightweight info exchange (Japanese + English)
+    # NOTE: avoid generic Japanese terms like 軽量 (matches lightweight framework articles),
+    # チャット (matches any chat implementation), メモ (matches any note-taking tool),
+    # 投稿 (matches any blog post), コミュニティ (matches any community article)
+    "匿名", "掲示板", "エフェメラル", "使い捨て", "ハイパーローカル",
+    "匿名投稿", "匿名共有", "匿名掲示板", "位置情報共有",
+    "anonymous", "ephemeral", "bulletin board", "hyperlocal",
+    "low friction", "disposable social", "ambient social",
 ]
 
 QIITA_BASE = "https://qiita.com/api/v2/items"
@@ -70,7 +91,7 @@ def build_date_range(year: int, rolling: bool) -> tuple[str, str]:
 
 
 def is_relevant(item: dict) -> bool:
-    """Return True if the article title or tags match a proximity keyword."""
+    """Return True if the article title or tags match a relevance keyword."""
     title_lower = item.get("title", "").lower()
     tags_lower = " ".join(t["name"] for t in item.get("tags", [])).lower()
     combined = title_lower + " " + tags_lower
@@ -96,7 +117,7 @@ def fetch_qiita_items(
     })
     url = f"{QIITA_BASE}?{params}"
 
-    headers = {"User-Agent": "ProximityCommunicationResearch/1.0"}
+    headers = {"User-Agent": "ProximityLightExchangeResearch/1.0"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
@@ -132,7 +153,7 @@ def normalize_item(item: dict, query: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fetch proximity communication Qiita articles for idea research"
+        description="Fetch proximity/light-exchange Qiita articles for idea research"
     )
     parser.add_argument(
         "--year", type=int, default=datetime.now().year,
@@ -147,7 +168,7 @@ def main():
         help="Minimum likes threshold to keep an article (default: 3)"
     )
     parser.add_argument(
-        "--output", type=str, default="/tmp/qiita_proximity_raw.json",
+        "--output", type=str, default="/tmp/qiita_raw.json",
         help="Output JSON file path"
     )
     parser.add_argument(
@@ -160,7 +181,7 @@ def main():
     )
     parser.add_argument(
         "--queries", type=str, default=None,
-        help="Comma-separated query list (default: built-in proximity list)"
+        help="Comma-separated query list (default: built-in list)"
     )
     parser.add_argument(
         "--no-filter", action="store_true",
@@ -168,7 +189,7 @@ def main():
     )
     args = parser.parse_args()
 
-    queries = args.queries.split(",") if args.queries else PROXIMITY_QUERIES
+    queries = args.queries.split(",") if args.queries else QUERIES
     start_date, end_date = build_date_range(args.year, args.rolling)
 
     # Resolve token: --token > QIITA_TOKEN env var > ~/.config/qiita/token > .env
@@ -189,7 +210,7 @@ def main():
         f"rolling 12 months ({start_date} to {end_date})"
         if args.rolling else f"year {args.year}"
     )
-    print(f"Fetching Qiita proximity articles for {period_label}")
+    print(f"Fetching Qiita articles for {period_label}")
     print(f"  Queries: {len(queries)} | Min likes: {args.min_likes} | "
           f"Filter: {'OFF' if args.no_filter else 'ON'}")
 
@@ -255,7 +276,7 @@ def main():
         "data_note": (
             "Qiita reflects Japanese developer community perspectives. "
             "Queries use tag:/title: forms for precision. "
-            "Results are post-filtered to ensure proximity relevance. "
+            "Results are post-filtered to ensure relevance. "
             "Rate limit: 60 req/hour (no token) / 1000 req/hour (with token)."
         ),
     }
