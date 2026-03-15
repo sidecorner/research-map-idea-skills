@@ -12,8 +12,9 @@ Example path: `reports/2026/2026-03-14/143022.md`
 # すれ違い通信アイデア調査レポート
 
 **調査対象年号:** {year}
+**調査期間:** {start_date} 〜 {end_date}（直近1年間 or {year}年通年）
 **調査日時:** {datetime}
-**データソース:** Reddit ({subreddits_count} subreddits) / Hacker News ({hn_queries_count} queries)
+**データソース:** Reddit ({subreddits_count} subreddits) / Hacker News ({hn_queries_count} queries) / Qiita ({qiita_queries_count} queries)
 **指定条件:** {constraints（なし の場合は「なし」）}
 
 ---
@@ -48,6 +49,18 @@ Example path: `reports/2026/2026-03-14/143022.md`
 
 ---
 
+## Qiita 調査結果
+
+### 注目記事 トップ10
+
+{Table of top Qiita articles by engagement_score (likes + comments×2), with title, likes, tags, URL}
+
+### 日本語開発者コミュニティの関心領域
+
+{2–3 themes from Qiita that reflect Japanese developer experience and pain points}
+
+---
+
 ## アイデア提案
 
 For each idea, include the following structure:
@@ -63,7 +76,7 @@ For each idea, include the following structure:
 {How proximity/encounter communication is the core mechanic — e.g., BLE passive discovery, location check-in, event-based encounter, QR/NFC tap}
 
 **根拠となるユーザーの声**
-{1–3 specific Reddit posts or HN threads that validate this pain point or demand}
+{1–3 specific Reddit posts, HN threads, or Qiita articles that validate this pain point or demand}
 
 **スコア評価**
 
@@ -95,7 +108,7 @@ For each idea, include the following structure:
 
 ---
 
-*このレポートは proximity-communication-idea-research スキルにより自動生成されました。*
+*このレポートは proximity-communication-idea-research スキルにより自動生成されました。データソース: Reddit / Hacker News / Qiita*
 ```
 
 ---

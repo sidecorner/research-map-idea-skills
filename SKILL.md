@@ -38,18 +38,35 @@ Wait for their response. Save the values as:
 - `{year}` — the target year (default: current year)
 - `{constraints}` — freeform text describing the user's requirements, or empty if none
 
+**Determining the collection date range:**
+
+After the user responds, compute the date range for data collection:
+
+- **If `{year}` == current year** (i.e., the year is not yet complete):
+  - Use a **rolling 12-month window**: `start_date = today − 1 year`, `end_date = today`
+  - Pass `--rolling` flag to all data collection scripts
+  - Report this as: `**調査期間:** {start_date} 〜 {end_date}（直近1年間）`
+- **If `{year}` is a past year** (fully complete):
+  - Use the full calendar year: `start_date = {year}-01-01`, `end_date = {year}-12-31`
+  - Pass `--year {year}` to all scripts (no `--rolling` flag)
+  - Report this as: `**調査期間:** {year}-01-01 〜 {year}-12-31`
+
+Save the computed values as `{start_date}`, `{end_date}`, and `{rolling}` (true/false).
+
 **If constraints are provided**, note them before proceeding. They will guide idea generation and scoring in Step 3 — but do **not** narrow the data collection in Steps 1–2. Collecting broad data and then filtering ideas produces better results than filtering the data upfront.
 
 ---
 
 ## Step 1: Collect Data
 
-Run both data collection steps from the **project root directory**
+Run all data collection steps from the **project root directory**
 (`research-map-idea-skills/`). If you're not already there, `cd` to it first.
 
-### 1a. Reddit — Proximity Subreddits
+Use the date range flags determined in Step 0:
+- Rolling window: add `--rolling` (omit `--year`)
+- Past year: add `--year {year}` (omit `--rolling`)
 
-Run the adapted Reddit script:
+### 1a. Reddit — Proximity Subreddits
 
 ```bash
 python scripts/fetch_reddit_proximity.py \
@@ -64,8 +81,15 @@ See `references/subreddits.md` for the full list and rationale.
 
 ### 1b. Hacker News — High-Engagement Posts
 
-Run the dedicated proximity HN script (uses proximity queries by default):
+**Rolling window (current year):**
+```bash
+python scripts/fetch_hn_proximity.py \
+  --rolling \
+  --min-points 10 \
+  --output /tmp/hn_proximity_rolling.json
+```
 
+**Past year:**
 ```bash
 python scripts/fetch_hn_proximity.py \
   --year {year} \
@@ -73,7 +97,7 @@ python scripts/fetch_hn_proximity.py \
   --output /tmp/hn_proximity_{year}.json
 ```
 
-If the current year yields fewer than 10 posts, also run with `--year {year-1}` to supplement with recent trends:
+If the result yields fewer than 10 posts, also run the previous year to supplement:
 
 ```bash
 python scripts/fetch_hn_proximity.py \
@@ -84,11 +108,39 @@ python scripts/fetch_hn_proximity.py \
 
 See `references/hn_queries.md` for the full query list and why each one matters.
 
+### 1c. Qiita — Japanese Developer Articles
+
+> **Token is read automatically from `QIITA_TOKEN` environment variable.**
+> If the env var is set, no `--token` flag is needed. See setup note below.
+
+**Rolling window (current year):**
+```bash
+python scripts/fetch_qiita_proximity.py \
+  --rolling \
+  --output /tmp/qiita_proximity_rolling.json
+```
+
+**Past year:**
+```bash
+python scripts/fetch_qiita_proximity.py \
+  --year {year} \
+  --output /tmp/qiita_proximity_{year}.json
+```
+
+Qiita captures Japanese developer perspectives — implementation pain points,
+architecture discussions, and "I tried to build X" articles that complement
+Reddit user pain points and HN market interest.
+See `references/qiita_queries_proximity.md` for the full query list.
+
+**If the script reports `rate_limited: true`:** Partial results are still saved and usable.
+Note this in the report with a caveat. It means `QIITA_TOKEN` is not set — check with
+`echo $QIITA_TOKEN`.
+
 ---
 
 ## Step 2: Analyze the Data
 
-Read both output files. For each source:
+Read all three output files. For each source:
 
 > **If `{constraints}` were specified**, keep them in mind while reading — note which pain points and trends are especially relevant to those constraints. Don't discard other findings; you'll need the full picture to judge whether the constraints are well-served by the data.
 
@@ -102,10 +154,18 @@ Read both output files. For each source:
 - High comment counts = controversy or deep interest — both are valuable signals
 - Look for Show HN posts (people building something), Ask HN posts (people wanting something), and trend articles
 
+**Qiita analysis:**
+- Focus on articles with high `engagement_score` (likes + 2× comments)
+- Look for "やってみた" (tried it) articles — often reveal implementation pain points
+- Articles about failed approaches or unexpected limitations are especially valuable signals
+- Note which tags appear on highly-liked articles — they indicate active community interest
+- Qiita reflects Japanese developer practical experience; it often surfaces mobile/iOS/Android specifics that Reddit misses
+
 **Cross-reference patterns:**
 - Do Reddit users want something that HN shows builders are already trying (but failing at)?
-- Are there pain points that appear in multiple subreddits?
-- What categories are completely absent (= underserved)?
+- Does Qiita show Japanese developers encountering technical blockers that suggest an underserved niche?
+- Are there pain points that appear in multiple subreddits AND on Qiita? (= strong cross-market signal)
+- What categories are completely absent from all three sources (= underserved)?
 
 ---
 
@@ -163,9 +223,11 @@ mkdir -p reports/{year}/{yyyy-mm-dd}/
 The report must include:
 1. Executive summary (1–3 sentences)
    - If constraints were specified, state them at the top: `**指定条件:** {constraints}`
+   - Always include: `**調査期間:** {start_date} 〜 {end_date}`
 2. Reddit findings: top pain-point posts + observed themes
 3. HN findings: top posts + builder/market interest themes
-4. For each idea:
+4. Qiita findings: top articles + Japanese developer perspectives
+5. For each idea:
    - Concept description
    - How proximity communication is the core mechanic
    - Evidence from user data (specific posts/threads)
@@ -178,8 +240,9 @@ The report must include:
 ## Key Constraints
 
 - **This skill is local to this project directory.** Do not carry findings or scripts to other projects.
-- **Always use the adapted scripts** (`fetch_reddit_proximity.py` for Reddit, `fetch_hn.py` with proximity queries for HN) rather than manually browsing the sites.
-- **Ground every idea in data.** Each proposed idea should cite at least one real Reddit post or HN thread as evidence.
+- **Always use the adapted scripts** (`fetch_reddit_proximity.py` for Reddit, `fetch_hn_proximity.py` for HN, `fetch_qiita_proximity.py` for Qiita) rather than manually browsing the sites.
+- **Use `--rolling` when the target year is the current year.** Never collect only a partial calendar year — always ensure a full 12 months of data.
+- **Ground every idea in data.** Each proposed idea should cite at least one real Reddit post, HN thread, or Qiita article as evidence.
 - **Keep ideas small-team-viable.** Don't propose ideas that require large engineering teams, regulatory approval, or hardware manufacturing at scale.
 - **Respect the scoring rubric.** Don't inflate scores; honest low scores are more useful than optimistic ones.
 
@@ -189,7 +252,9 @@ The report must include:
 
 - `references/subreddits.md` — Subreddit list with rationale
 - `references/hn_queries.md` — HN queries with design notes
+- `references/qiita_queries_proximity.md` — Qiita queries with design notes
 - `references/scoring_rubric.md` — Full 5-dimension scoring guide with interpretation
 - `references/report_template.md` — Report structure template
 - `scripts/fetch_reddit_proximity.py` — Reddit data collection script (proximity-adapted)
-- `scripts/fetch_hn.py` — HN data collection script (use with `--queries` override)
+- `scripts/fetch_hn_proximity.py` — HN data collection script (supports `--rolling`)
+- `scripts/fetch_qiita_proximity.py` — Qiita data collection script (supports `--rolling`)

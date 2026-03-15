@@ -42,6 +42,21 @@ Wait for their response. Save:
 - `{year}` — target year (default: current year)
 - `{constraints}` — freeform constraints text, or empty
 
+**Determining the collection date range:**
+
+After the user responds, compute the date range for data collection:
+
+- **If `{year}` == current year** (i.e., the year is not yet complete):
+  - Use a **rolling 12-month window**: `start_date = today − 1 year`, `end_date = today`
+  - Pass `--rolling` flag to all data collection scripts
+  - Report this as: `**調査期間:** {start_date} 〜 {end_date}（直近1年間）`
+- **If `{year}` is a past year** (fully complete):
+  - Use the full calendar year: `start_date = {year}-01-01`, `end_date = {year}-12-31`
+  - Pass `--year {year}` to all scripts (no `--rolling` flag)
+  - Report this as: `**調査期間:** {year}-01-01 〜 {year}-12-31`
+
+Save the computed values as `{start_date}`, `{end_date}`, and `{rolling}` (true/false).
+
 **If constraints are provided**, note them before proceeding. They guide idea generation
 in Step 3, but do **not** narrow the data collection in Steps 1–2. Broad data collection
 followed by constrained filtering produces sharper, more defensible ideas.
@@ -50,7 +65,11 @@ followed by constrained filtering produces sharper, more defensible ideas.
 
 ## Step 1: Collect Data
 
-Run both scripts from the **project root directory** (`research-map-idea-skills/`).
+Run all scripts from the **project root directory** (`research-map-idea-skills/`).
+
+Use the date range flags determined in Step 0:
+- Rolling window: add `--rolling` (omit `--year`)
+- Past year: add `--year {year}` (omit `--rolling`)
 
 ### 1a. Reddit — Light Exchange Subreddits
 
@@ -67,6 +86,15 @@ full list and rationale.
 
 ### 1b. Hacker News — High-Engagement Posts
 
+**Rolling window (current year):**
+```bash
+python scripts/fetch_hn_light_exchange.py \
+  --rolling \
+  --min-points 5 \
+  --output /tmp/hn_light_rolling.json
+```
+
+**Past year:**
 ```bash
 python scripts/fetch_hn_light_exchange.py \
   --year {year} \
@@ -74,7 +102,7 @@ python scripts/fetch_hn_light_exchange.py \
   --output /tmp/hn_light_{year}.json
 ```
 
-If the current year yields fewer than 10 posts, also supplement with the previous year:
+If the result yields fewer than 10 posts, also supplement with the previous year:
 
 ```bash
 python scripts/fetch_hn_light_exchange.py \
@@ -85,11 +113,39 @@ python scripts/fetch_hn_light_exchange.py \
 
 See `references/light_exchange_hn_queries.md` for query design notes.
 
+### 1c. Qiita — Japanese Developer Articles
+
+> **Token is read automatically from `QIITA_TOKEN` environment variable.**
+> If the env var is set, no `--token` flag is needed. See setup note below.
+
+**Rolling window (current year):**
+```bash
+python scripts/fetch_qiita_light_exchange.py \
+  --rolling \
+  --output /tmp/qiita_light_rolling.json
+```
+
+**Past year:**
+```bash
+python scripts/fetch_qiita_light_exchange.py \
+  --year {year} \
+  --output /tmp/qiita_light_{year}.json
+```
+
+Qiita captures Japanese developer perspectives — implementation pain points,
+anonymity vs. abuse tradeoffs, and lightweight UX explorations that complement
+Reddit user pain points and HN market interest.
+See `references/qiita_queries_light_exchange.md` for the full query list.
+
+**If the script reports `rate_limited: true`:** Partial results are still saved and usable.
+Note this in the report with a caveat. It means `QIITA_TOKEN` is not set — check with
+`echo $QIITA_TOKEN`.
+
 ---
 
 ## Step 2: Analyze the Data
 
-Read both output files. For each source:
+Read all three output files. For each source:
 
 > **If `{constraints}` were specified**, keep them in mind while reading — note which pain
 > points and trends are especially relevant. Don't discard other findings; you'll need the
@@ -107,11 +163,19 @@ Read both output files. For each source:
   and Ask HN threads (explicit demand statements)
 - High comment counts with controversial tone often reveal structural tensions — e.g., "anonymous = abuse"
 
+**Qiita analysis:**
+- Focus on articles with high `engagement_score` (likes + 2× comments)
+- Look for "やってみた" (tried it) and "作ってみた" (built it) articles — these reveal implementation pain points and UX decisions
+- Articles about moderation challenges, abuse patterns, and anonymity tradeoffs are especially valuable
+- Note popular tags — they indicate active interest areas in the Japanese dev community
+- Qiita often surfaces mobile-first, LINE integration, and Japan-specific UX considerations that Reddit misses
+
 **Cross-reference patterns:**
 - Where does Reddit demand something that HN builders have tried but abandoned?
-- What friction points appear across multiple communities? (e.g., "too many steps", "requires account")
+- Does Qiita show Japanese developers encountering problems that suggest an underserved niche in the JP market?
+- What friction points appear across multiple communities AND on Qiita? (= strong cross-market signal)
 - What existing platforms are being repurposed for lightweight exchange? (e.g., using Notion as a bulletin board, using Reddit for Q&A because nothing lighter exists)
-- What categories are completely absent from HN builds? (= no one has tried it yet)
+- What categories are completely absent from all three sources? (= no one has tried it yet)
 
 ---
 
@@ -167,10 +231,12 @@ mkdir -p reports/{year}/{yyyy-mm-dd}/
 The report must include:
 1. Executive summary (1–3 sentences)
    - If constraints were specified: `**指定条件:** {constraints}`
+   - Always include: `**調査期間:** {start_date} 〜 {end_date}`
    - Tag the report topic: `**調査テーマ:** ライトな情報交換`
 2. Reddit findings: top pain-point posts + observed themes
 3. HN findings: top posts + builder/market interest themes
-4. For each idea:
+4. Qiita findings: top articles + Japanese developer perspectives
+5. For each idea:
    - Concept description
    - What makes the exchange feel "light" — specifically how friction is reduced
    - Evidence from user data (specific posts/threads)
@@ -183,8 +249,9 @@ The report must include:
 ## Key Constraints
 
 - **This skill is local to this project directory.** Do not carry findings or scripts to other projects.
-- **Always use the dedicated scripts** (`fetch_reddit_light_exchange.py`, `fetch_hn_light_exchange.py`) rather than manually browsing.
-- **Ground every idea in data.** Each proposed idea should cite at least one real Reddit post or HN thread.
+- **Always use the dedicated scripts** (`fetch_reddit_light_exchange.py`, `fetch_hn_light_exchange.py`, `fetch_qiita_light_exchange.py`) rather than manually browsing.
+- **Use `--rolling` when the target year is the current year.** Never collect only a partial calendar year — always ensure a full 12 months of data.
+- **Ground every idea in data.** Each proposed idea should cite at least one real Reddit post, HN thread, or Qiita article.
 - **Keep ideas small-team-viable.** Don't propose ideas requiring large moderation teams, complex ML pipelines, or regulatory approval.
 - **Lightness is a design constraint, not just a metaphor.** For each idea, be explicit about what has been removed or simplified compared to a full social platform.
 - **Respect the scoring rubric.** Don't inflate scores; honest low scores are more useful than optimistic ones.
@@ -195,7 +262,9 @@ The report must include:
 
 - `references/light_exchange_subreddits.md` — Subreddit list with rationale
 - `references/light_exchange_hn_queries.md` — HN queries with design notes
+- `references/qiita_queries_light_exchange.md` — Qiita queries with design notes
 - `references/scoring_rubric.md` — Full 5-dimension scoring guide (shared with proximity skill)
 - `references/report_template.md` — Report structure template (shared with proximity skill)
 - `scripts/fetch_reddit_light_exchange.py` — Reddit data collection script
-- `scripts/fetch_hn_light_exchange.py` — HN data collection script
+- `scripts/fetch_hn_light_exchange.py` — HN data collection script (supports `--rolling`)
+- `scripts/fetch_qiita_light_exchange.py` — Qiita data collection script (supports `--rolling`)
