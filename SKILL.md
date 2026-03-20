@@ -106,7 +106,7 @@ Follow the template in `references/report_template.md`.
 mkdir -p reports/{year}/{yyyymmdd}/
 ```
 
-The report must include: executive summary, Reddit/HN/Qiita/Indie Hackers findings, per-idea concept + evidence + score table + next action, comparative summary table.
+The report must include: the user's original prompt (verbatim), executive summary, Reddit/HN/Qiita/Indie Hackers findings, per-idea concept + evidence + score table + next action, comparative summary table.
 
 ---
 
