@@ -21,6 +21,15 @@
 - Note popular tags — they indicate active interest areas in the Japanese dev community
 - Qiita often surfaces mobile-first, Japan-specific UX considerations that Reddit misses
 
+## Indie Hackers
+
+- Read the `posts` array (key is `posts`)
+- Focus on high `engagement_score` (replies × 10 + link_clicks × 3 + views × 0.01)
+- `group` field indicates topic category (e.g., "Developers", "Digital Nomads", "Growth")
+- IH posts often reveal solo-founder pain points, monetization strategies, and niche ideas earlier than HN
+- Look for: "I built X and here's what happened", "Looking for a partner to build Y", "Micro-SaaS for Z"
+- IH skews toward English-speaking indie devs and is particularly strong on niche app ideas and early-stage validation
+
 ## Cross-Reference Patterns
 
 - Do Reddit users want something that HN builders have tried but abandoned?

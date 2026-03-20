@@ -16,7 +16,7 @@ Example path: `reports/2026/20260314/143022.md`
 **調査対象年号:** {year}
 **調査期間:** {start_date} 〜 {end_date}（直近1年間 or {year}年通年）
 **調査日時:** {datetime}
-**データソース:** Reddit ({subreddits_count} subreddits) / Hacker News ({hn_queries_count} queries) / Qiita ({qiita_queries_count} queries)
+**データソース:** Reddit ({subreddits_count} subreddits) / Hacker News ({hn_queries_count} queries) / Qiita ({qiita_queries_count} queries) / Indie Hackers (Firebase REST API)
 **指定条件:** {constraints（なし の場合は「なし」）}
 
 ---
@@ -63,6 +63,18 @@ Example path: `reports/2026/20260314/143022.md`
 
 ---
 
+## Indie Hackers 調査結果
+
+### 注目投稿 トップ10
+
+{Table of top IH posts by engagement_score (replies×10 + link_clicks×3 + views×0.01), with title, replies, views, group, URL}
+
+### インディー開発者の関心領域
+
+{2–3 themes from IH that reveal solo-founder pain points, niche ideas, or early-stage validation signals}
+
+---
+
 ## アイデア提案
 
 For each idea, include the following structure:
@@ -79,7 +91,7 @@ For each idea, include the following structure:
 {Light exchange skill: What makes the exchange feel "light" — specifically how friction is reduced compared to full social platforms}
 
 **根拠となるユーザーの声**
-{1–3 specific Reddit posts, HN threads, or Qiita articles that validate this pain point or demand}
+{1–3 specific Reddit posts, HN threads, Qiita articles, or IH posts that validate this pain point or demand}
 
 **スコア評価**
 

@@ -48,6 +48,7 @@ Save `{year}` and `{constraints}`. Constraints guide idea generation (Step 3) bu
 Run all scripts from the project root (`research-map-idea-skills/`).
 
 > **Reddit:** always use `--year {year}`, never `--rolling`.
+> **Indie Hackers:** always use `--rolling` for current year; use `--year {year}` for past years.
 
 ```bash
 # Reddit
@@ -64,6 +65,12 @@ python scripts/fetch_qiita.py --rolling --output /tmp/qiita_rolling.json
 
 # Qiita (past year)
 python scripts/fetch_qiita.py --year {year} --output /tmp/qiita_{year}.json
+
+# Indie Hackers (rolling / current year)
+python scripts/fetch_indiehackers.py --rolling --output /tmp/ih_rolling.json
+
+# Indie Hackers (past year)
+python scripts/fetch_indiehackers.py --year {year} --output /tmp/ih_{year}.json
 ```
 
 If HN yields fewer than 10 posts, supplement with the previous year (`--year {year-1} --min-points 10`).
@@ -99,7 +106,7 @@ Follow the template in `references/report_template.md`.
 mkdir -p reports/{year}/{yyyymmdd}/
 ```
 
-The report must include: executive summary, Reddit/HN/Qiita findings, per-idea concept + evidence + score table + next action, comparative summary table.
+The report must include: executive summary, Reddit/HN/Qiita/Indie Hackers findings, per-idea concept + evidence + score table + next action, comparative summary table.
 
 ---
 

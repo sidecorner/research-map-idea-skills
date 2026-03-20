@@ -2,7 +2,7 @@
 
 アプリ・Webサービスの**穴場アイデアを調査・発掘するためのローカルスキル**プロジェクトです。
 
-Reddit のペインポイント・Hacker News の注目投稿・Qiita の日本語開発者記事を自動収集し、Claude がアイデアを分析・スコアリングしてレポートとして出力します。
+Reddit のペインポイント・Hacker News の注目投稿・Indie Hackers のフォーラム投稿・Qiita の日本語開発者記事を自動収集し、Claude がアイデアを分析・スコアリングしてレポートとして出力します。
 
 ---
 
@@ -48,9 +48,10 @@ research-map-idea-skills/
 ├── README.md                    # このファイル
 │
 ├── scripts/
-│   ├── fetch_reddit.py          # Reddit データ収集（40サブレディット）
+│   ├── fetch_reddit.py          # Reddit データ収集（38サブレディット）
 │   ├── fetch_hn.py              # HN データ収集（51クエリ、--rolling 対応）
-│   └── fetch_qiita.py           # Qiita データ収集（23クエリ、--rolling 対応）
+│   ├── fetch_qiita.py           # Qiita データ収集（23クエリ、--rolling 対応）
+│   └── fetch_indiehackers.py    # Indie Hackers データ収集（Firebase REST API）
 │
 ├── references/
 │   ├── analysis_guide.md        # データ分析・クロスリファレンスガイド
@@ -74,30 +75,33 @@ research-map-idea-skills/
    → 過去年指定: その年の 01-01〜12-31 を使用
         ↓
 ② Reddit データ収集
-   fetch_reddit.py --year {year}（40サブレディット）
+   fetch_reddit.py --year {year}（38サブレディット）
         ↓
 ③ Hacker News データ収集
-   fetch_hn.py --rolling（今年）/ --year {year}（過去年）（53クエリ・min-points 5）
+   fetch_hn.py --rolling（今年）/ --year {year}（過去年）（51クエリ・min-points 5）
    → 10件未満の場合は前年データを補完
         ↓
 ④ Qiita データ収集
-   fetch_qiita.py --rolling（今年）/ --year {year}（過去年）（24クエリ）
+   fetch_qiita.py --rolling（今年）/ --year {year}（過去年）（23クエリ）
         ↓
-⑤ データ分析
+⑤ Indie Hackers データ収集
+   fetch_indiehackers.py --rolling（今年）/ --year {year}（過去年）（Firebase REST API）
+        ↓
+⑥ データ分析
    - ペインポイントトップ抽出
-   - Reddit × HN × Qiita クロス参照
+   - Reddit × HN × Qiita × Indie Hackers クロス参照
    - 「誰も作っていない空白地帯」の発見
    - 指定条件に関連するシグナルを注視
         ↓
-⑥ アイデア生成（3〜5案）
+⑦ アイデア生成（3〜5案）
    - テーマに合致する核となるメカニズムを持つ設計のみ提案
    - 条件に合うアイデアを優先。条件外でも有力なものは別掲
    - 実データ（投稿URL / 記事URL）を根拠として引用
         ↓
-⑦ 5軸スコアリング
+⑧ 5軸スコアリング
    実現可能性 / 開発期間 / 収益性 / 競合優位性 / 小規模開発適性
         ↓
-⑧ レポート出力
+⑨ レポート出力
    reports/{year}/{yyyymmdd}/{HHMMSS}.md
 ```
 
@@ -125,12 +129,13 @@ research-map-idea-skills/
 
 ## 調査対象データソース
 
-3つのソースからデータを収集し、英語圏ユーザーの声・グローバルビルダーの動向・日本語開発者の実装経験を横断的に分析します。
+4つのソースからデータを収集し、英語圏ユーザーの声・グローバルビルダーの動向・インディー開発者のリアル・日本語開発者の実装経験を横断的に分析します。
 
 | ソース | 特性 |
 |--------|------|
 | **Reddit** | 英語圏ユーザーのペインポイント・フィーチャーリクエスト |
 | **Hacker News** | グローバルなビルダー・起業家の市場関心・技術動向 |
+| **Indie Hackers** | ソロ・小規模開発者のニッチアイデア・初期検証・収益化実例 |
 | **Qiita** | 日本語開発者コミュニティの実装経験・技術的障壁 |
 
 主なカバー領域（fetch_reddit.py・38サブレディット）:
@@ -201,6 +206,12 @@ python scripts/fetch_qiita.py --rolling --output /tmp/qiita_rolling.json
 
 # Qiita（過去年）
 python scripts/fetch_qiita.py --year 2025 --output /tmp/qiita_2025.json
+
+# Indie Hackers（直近1年ローリング）
+python scripts/fetch_indiehackers.py --rolling --output /tmp/ih_rolling.json
+
+# Indie Hackers（過去年）
+python scripts/fetch_indiehackers.py --year 2025 --output /tmp/ih_2025.json
 
 # カスタム指定の例
 python scripts/fetch_reddit.py --year 2026 --subreddits "AskReddit,SideProject,AppIdeas"
