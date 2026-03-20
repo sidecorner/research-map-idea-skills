@@ -14,7 +14,7 @@ Each idea must:
 - **Ephemeral community boards**: Notes or tips that expire — no permanent record, no follower counts
 - **Context-triggered sharing**: Leave a note tied to a place or object that others discover passively
 - **Gamified encounters**: StreetPass-style collections, stamps, or artifacts from physical meetups
-- **Physical-digital bridges**: NFC badges, QR systems, or BLE devices as carriers of exchange
+- **Physical-digital bridges**: QR systems or BLE devices as carriers of exchange (NFC excluded)
 - **Anonymous peer Q&A**: Ask anything without an account; community answers without identity pressure
 - **Map-anchored content**: GPS or map SDK (Mapbox, Google Maps) as the discovery surface
 

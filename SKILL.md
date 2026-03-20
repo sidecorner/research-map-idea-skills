@@ -3,10 +3,10 @@ name: idea-research
 description: >
   Research and generate niche product ideas for apps or web services built around
   proximity/encounter communication (すれ違い通信) and lightweight information exchange —
-  such as Bluetooth passive discovery, NFC tap-to-connect, location-based encounters,
-  StreetPass-style mechanics, ephemeral local notes, anonymous peer Q&A, and hyperlocal
-  bulletin boards. Pulls real user pain points from Reddit, Hacker News, and Qiita,
-  then synthesizes actionable ideas with feasibility scoring.
+  such as GPS-based location unlock mechanics, geofence-triggered content, location-based
+  encounters, StreetPass-style mechanics, ephemeral local notes, anonymous peer Q&A, and
+  hyperlocal bulletin boards. Pulls real user pain points from Reddit, Hacker News, and
+  Qiita, then synthesizes actionable ideas with feasibility scoring. NFC is excluded.
 
   ALWAYS use this skill when the user wants to:
   - Research product ideas involving proximity communication, すれ違い通信, or encounter features

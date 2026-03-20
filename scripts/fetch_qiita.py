@@ -35,16 +35,15 @@ QUERIES = [
     # Proximity / encounter communication
     "tag:BLE",
     "tag:Bluetooth",
-    "tag:NFC",
     "tag:CoreBluetooth",
     "tag:位置情報",
     "tag:iBeacon",
     "title:すれ違い",
     "title:BLE 近接",
-    "title:NFC 実装",
     "title:ジオフェンス",
     "title:StreetPass",
     "title:Bluetooth proximity",
+    "title:GPS 位置情報",
     # Lightweight information exchange
     "tag:匿名",
     "tag:掲示板",
@@ -63,7 +62,7 @@ QUERIES = [
 # Keywords for post-filtering: article title OR any tag must contain at least one.
 RELEVANCE_KEYWORDS = [
     # Proximity / encounter (Japanese + English)
-    "ble", "nfc", "bluetooth", "近接", "すれ違い", "streetpass", "ビーコン",
+    "ble", "bluetooth", "近接", "すれ違い", "streetpass", "ビーコン",
     "位置情報", "gps", "ジオフェンス", "ibeacon", "geofence", "mesh",
     "proximity", "corebluetooth", "p2p", "offline", "encounter", "location",
     "nearby", "beacon",

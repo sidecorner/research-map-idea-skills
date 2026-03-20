@@ -25,9 +25,8 @@ SUBREDDITS = [
     "Ingress",
     "NianticWayfarer",
     "streetpass",
-    # Tech: Bluetooth, NFC, local networking
+    # Tech: Bluetooth, local networking (NFC excluded)
     "bluetooth",
-    "NFC",
     "IoT",
     "embedded",
     # Hyperlocal & community apps
@@ -91,7 +90,7 @@ PAIN_SIGNAL_KEYWORDS = [
 # unrelated posts (e.g., "irl" matches "girl", "tip" matches "tipped off").
 RELEVANCE_KEYWORDS = [
     # Proximity / encounter — specific tech/concept terms
-    "proximity", "bluetooth", "nfc", " ble ", "streetpass",
+    "proximity", "bluetooth", " ble ", "streetpass",
     "pass by", "serendipitous", "mesh network",
     "peer to peer", " p2p ", "hyperlocal", "geofence",
     "location based", "location-based", "find people near",

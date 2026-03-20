@@ -34,7 +34,6 @@ QUERIES = [
     "serendipitous encounters",
     "hyperlocal app",
     "offline P2P",
-    "NFC social",
     "mesh network social",
     "BLE beacon",
     "passive discovery",
@@ -45,7 +44,6 @@ QUERIES = [
     "spontaneous social",
     "local chat app",
     "bluetooth social",
-    "NFC tap",
     "random encounter app",
     "geofenced chat",
     "GPS ephemeral",
@@ -85,7 +83,6 @@ ALGOLIA_BASE = "https://hn.algolia.com/api/v1/search"
 RELEVANCE_PATTERNS = [
     # Proximity / encounter
     r"\bble\b",
-    r"\bnfc\b",
     r"\bbluetooth\b",
     r"\bibeacon\b",
     r"\bbeacon\b",
