@@ -57,6 +57,9 @@ QUERIES = [
     "title:掲示板 作り",
     "title:anonymous sharing",
     "title:ephemeral",
+    # Route / trajectory matching (added 2026-03-21: RouteNote アイデアで需要確認)
+    "title:GPS軌跡",
+    "title:経路マッチング",
 ]
 
 # Keywords for post-filtering: article title OR any tag must contain at least one.
@@ -72,6 +75,7 @@ RELEVANCE_KEYWORDS = [
     # 投稿 (matches any blog post), コミュニティ (matches any community article)
     "匿名", "掲示板", "エフェメラル", "使い捨て", "ハイパーローカル",
     "匿名投稿", "匿名共有", "匿名掲示板", "位置情報共有",
+    "gps軌跡", "経路マッチング", "軌跡", "ルートマッチング",
     "anonymous", "ephemeral", "bulletin board", "hyperlocal",
     "low friction", "disposable social", "ambient social",
 ]
